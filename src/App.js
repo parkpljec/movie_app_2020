@@ -1,4 +1,7 @@
 import React from 'react';
+import DraggableComponent from './drag';
+import ArrowKeyMover from './click';
+//import MiniGame from './minigame';
 
 function Food({ name }) {
   return (
@@ -26,6 +29,8 @@ function App() {
   return (
     <div>
       {foodILike.map(dish=>(<Food name={dish.name} />))}
+      <DraggableComponent />
+      <ArrowKeyMover />
     </div>
   );
 }

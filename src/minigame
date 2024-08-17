@@ -1,0 +1,77 @@
+import React, { useState, useEffect } from 'react';
+
+const MiniGame = () => {
+  const [playerPosition, setPlayerPosition] = useState({ x: 50, y: 50 });
+  const [itemPosition, setItemPosition] = useState(getRandomPosition());
+  const [score, setScore] = useState(0);
+
+  function getRandomPosition() {
+    const x = Math.floor(Math.random() * 90);
+    const y = Math.floor(Math.random() * 90);
+    return { x, y };
+  }
+
+  const handleKeyDown = (e) => {
+    let newPosition = { ...playerPosition };
+    switch (e.key) {
+      case 'ArrowUp':
+        newPosition.y = Math.max(0, newPosition.y - 5);
+        break;
+      case 'ArrowDown':
+        newPosition.y = Math.min(90, newPosition.y + 5);
+        break;
+      case 'ArrowLeft':
+        newPosition.x = Math.max(0, newPosition.x - 5);
+        break;
+      case 'ArrowRight':
+        newPosition.x = Math.min(90, newPosition.x + 5);
+        break;
+      default:
+        break;
+    }
+    setPlayerPosition(newPosition);
+  };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [playerPosition]);
+
+  useEffect(() => {
+    if (playerPosition.x === itemPosition.x && playerPosition.y === itemPosition.y) {
+      setScore(score + 1);
+      setItemPosition(getRandomPosition());
+    }
+  }, [playerPosition, itemPosition, score]);
+
+  return (
+    <div style={{ width: '100vw', height: '100vh', position: 'relative', backgroundColor: '#282c34' }}>
+      <div
+        style={{
+          width: '20px',
+          height: '20px',
+          backgroundColor: 'yellow',
+          position: 'absolute',
+          left: `${playerPosition.x}%`,
+          top: `${playerPosition.y}%`,
+          transition: 'left 0.1s, top 0.1s',
+        }}
+      />
+      <div
+        style={{
+          width: '20px',
+          height: '20px',
+          backgroundColor: 'red',
+          position: 'absolute',
+          left: `${itemPosition.x}%`,
+          top: `${itemPosition.y}%`,
+        }}
+      />
+      <div style={{ color: 'white', position: 'absolute', top: 0, left: 0, padding: '10px' }}>Score: {score}</div>
+    </div>
+  );
+};
+
+export default MiniGame;
